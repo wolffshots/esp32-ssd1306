@@ -15,7 +15,7 @@ and then ```git submodule update --remote --recursive``` in your main project
 
 ## folder contents
 
-the component **esp32-ssd1306** contains one source file in C language [ssd1306.c](ssd1306.c). the file is located in root folder.
+the component **esp32-ssd1306** contains three source files in C lang: [ssd1306.c](ssd1306.c), [ssd1306_i2c.c](ssd1306_i2c.c) and [ssd1306_spi.c](ssd1306_spi.c). the files are located in root folder.
 
 esp-idf projects are build using cmake. the project build configuration is contained in `CMakeLists.txt` files that provide set of directives and instructions describing the project's source files and targets (executable, library, or both). 
 
@@ -23,7 +23,8 @@ below is short explanation of remaining files in the project folder.
 
 ```
 ├── include                     header file directory
-│   └── ssd1306.h               the header file for this component
+│   ├── font8x8_basic.h         the header file which describes the font used for this component
+│   └── ssd1306.h               the main header file for this component
 ├── .gitignore                  describes what files and folders git should ignore
 ├── .travis.yml                 build rules for creating docs via doxygen
 ├── CMakeLists.txt              base project cmake file (describes dependencies, include dir and src dir)
@@ -31,7 +32,9 @@ below is short explanation of remaining files in the project folder.
 ├── Kconfig.projbuild           kconfig description file to add build time vars
 ├── LICENSE.md                  MIT license file
 ├── README.md                   this file
-└── ssd1306.c              core src file of the component
+├── ssd1306_i2c.c               i2c interface src file of the component
+├── ssd1306_spi.c               spi interface src file of the component
+└── ssd1306.c                   core src file of the component
 ```
 
 for more information on structure and contents of esp-idf projects, please refer to Section [Build System](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-guides/build-system.html) of the esp-idf programming guide.

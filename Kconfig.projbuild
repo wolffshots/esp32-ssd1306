@@ -5,6 +5,16 @@ menu "wolffshots/esp32-ssd1306 config"
         default "esp32-ssd1306"
         help
             tag for use with esp log library for ssd1306 library
+	config SSD1306_I2C_TAG
+		string "ssd1306 tag"
+		default "esp32-ssd1306_i2c"
+		help
+			tag for use with esp log library for ssd1306 i2c library
+	config SSD1306_SPI_TAG
+		string "ssd1306 tag"
+		default "esp32-ssd1306_spi"
+		help
+			tag for use with esp log library for ssd1306 spi library
 	choice INTERFACE
 		prompt "Interface"
 		default I2C_INTERFACE
