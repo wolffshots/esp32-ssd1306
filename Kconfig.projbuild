@@ -5,6 +5,13 @@ menu "wolffshots/esp32-ssd1306 config"
         default "esp32-ssd1306"
         help
             tag for use with esp log library for ssd1306 library
+	choice
+		prompt "choice of font"
+		config SSID_FONT_READABLE
+			bool "readable"
+		config SSID_FONT_BASIC
+			bool "basic"
+	endchoice
 	config SSD1306_I2C_TAG
 		string "ssd1306 tag"
 		default "esp32-ssd1306_i2c"
