@@ -3,11 +3,11 @@
  *
  * @since 2017/05/03
  * @author yanbe
- * @brief a clean simple font to use with an ssd1306 screen
+ * @brief basic font to use with an ssd1306 screen
  */
 
-#ifndef MAIN_FONT8X8_BASIC_H_
-#define MAIN_FONT8X8_BASIC_H_
+#ifndef MAIN_FONT8X8_BASIC_H
+#define MAIN_FONT8X8_BASIC_H
 
 /*
    Constant: font8x8_basic_tr
@@ -39,7 +39,8 @@
 	}
 */
 
-static uint8_t font8x8_basic_tr[128][8] = {
+#ifdef CONFIG_SSID_FONT_BASIC
+static uint8_t font8x8[128][8] = {
     {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}, // U+0000 (nul)
     {0x00, 0x04, 0x02, 0xFF, 0x02, 0x04, 0x00, 0x00}, // U+0001 (Up Allow)
     {0x00, 0x20, 0x40, 0xFF, 0x40, 0x20, 0x00, 0x00}, // U+0002 (Down Allow)
@@ -169,5 +170,6 @@ static uint8_t font8x8_basic_tr[128][8] = {
     {0x02, 0x03, 0x01, 0x03, 0x02, 0x03, 0x01, 0x00}, // U+007E (~)
     {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}  // U+007F
 };
+#endif // CONFIG_SSID_FONT_BASIC
 
-#endif /* MAIN_FONT8X8_BASIC_H_ */
+#endif /* MAIN_FONT8X8_BASIC_H */

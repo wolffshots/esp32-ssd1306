@@ -23,7 +23,9 @@ below is short explanation of remaining files in the project folder.
 
 ```
 ├── include                     header file directory
-│   ├── font8x8_basic.h         the header file which describes the font used for this component
+│   ├── font8x8_basic.h         default basic font
+│   ├── font8x8_readable.h      cleaner more plain font
+│   ├── font8x8_space.h         artistic interpretation of a space font
 │   └── ssd1306.h               the main header file for this component
 ├── .gitignore                  describes what files and folders git should ignore
 ├── .travis.yml                 build rules for creating docs via doxygen
