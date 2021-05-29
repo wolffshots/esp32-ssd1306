@@ -11,6 +11,8 @@ menu "wolffshots/esp32-ssd1306 config"
 			bool "readable"
 		config SSID_FONT_BASIC
 			bool "basic"
+		config SSID_FONT_SPACE
+			bool "space"
 	endchoice
 	config SSD1306_I2C_TAG
 		string "ssd1306 tag"

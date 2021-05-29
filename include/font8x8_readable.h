@@ -4,13 +4,13 @@
  * @brief a clean simple font to use with an ssd1306 screen
  */
 
-#ifndef MAIN_FONT8X8_READABLE_H_
-#define MAIN_FONT8X8_READABLE_H_
+#ifndef MAIN_FONT8X8_READABLE_H
+#define MAIN_FONT8X8_READABLE_H
 
 // Font: READABLE.pf
 
 #ifdef CONFIG_SSID_FONT_READABLE
-static uint8_t font8x8_readable[128][8] =
+static uint8_t font8x8[128][8] =
     {
         {0x00, 0x00, 0x00, 0x40, 0x00, 0x00, 0x00, 0x00}, // Char 000 (.)
         {0x7E, 0x81, 0xA5, 0xB1, 0xB1, 0x95, 0x81, 0x7E}, // Char 001 (.)
@@ -143,4 +143,4 @@ static uint8_t font8x8_readable[128][8] =
 };
 #endif // CONFIG_SSID_FONT_READABLE
 
-#endif /* MAIN_FONT8X8_READABLE_H_ */
+#endif /* MAIN_FONT8X8_READABLE_H */

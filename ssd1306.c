@@ -38,6 +38,7 @@
 #include "ssd1306.h"
 #include "font8x8_basic.h"
 #include "font8x8_readable.h"
+#include "font8x8_space.h"
 
 #include <string.h>
 
@@ -121,8 +122,7 @@ void ssd1306_display_text(SSD1306_t *dev, int page, char *text, int text_len, bo
     uint8_t image[8];
     for (uint8_t i = 0; i < _text_len; i++)
     {
-        memcpy(image, font8x8_readable[(uint8_t)text[i]], 8);
-        // memcpy(image, font8x8_basic_tr[(uint8_t)text[i]], 8);
+        memcpy(image, font8x8[(uint8_t)text[i]], 8);
         if (invert)
             ssd1306_invert(image, 8);
         if (dev->_flip)
@@ -291,8 +291,7 @@ void ssd1306_scroll_text(SSD1306_t *dev, char *text, int text_len, bool invert)
     uint8_t image[8];
     for (uint8_t i = 0; i < _text_len; i++)
     {
-        memcpy(image, font8x8_readable[(uint8_t)text[i]], 8);
-        // memcpy(image, font8x8_basic_tr[(uint8_t)text[i]], 8);
+        memcpy(image, font8x8[(uint8_t)text[i]], 8);
         if (invert)
             ssd1306_invert(image, 8);
         if (dev->_flip)
