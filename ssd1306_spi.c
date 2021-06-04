@@ -280,7 +280,7 @@ void spi_hardware_scroll(SSD1306_t *dev, ssd1306_scroll_type_t scroll)
 		spi_master_write_command(dev, OLED_CMD_HORIZONTAL_RIGHT); // 26
 		spi_master_write_command(dev, 0x00);					  // Dummy byte
 		spi_master_write_command(dev, 0x00);					  // Define start page address
-		spi_master_write_command(dev, 0x07);					  // Frame frequency
+		spi_master_write_command(dev, CONFIG_SSD1306_FRAME_FREQ); // Frame frequency
 		spi_master_write_command(dev, 0x07);					  // Define end page address
 		spi_master_write_command(dev, 0x00);					  //
 		spi_master_write_command(dev, 0xFF);					  //
@@ -289,14 +289,14 @@ void spi_hardware_scroll(SSD1306_t *dev, ssd1306_scroll_type_t scroll)
 
 	if (scroll == SCROLL_LEFT)
 	{
-		spi_master_write_command(dev, OLED_CMD_HORIZONTAL_LEFT); // 27
-		spi_master_write_command(dev, 0x00);					 // Dummy byte
-		spi_master_write_command(dev, 0x00);					 // Define start page address
-		spi_master_write_command(dev, 0x07);					 // Frame frequency
-		spi_master_write_command(dev, 0x07);					 // Define end page address
-		spi_master_write_command(dev, 0x00);					 //
-		spi_master_write_command(dev, 0xFF);					 //
-		spi_master_write_command(dev, OLED_CMD_ACTIVE_SCROLL);	 // 2F
+		spi_master_write_command(dev, OLED_CMD_HORIZONTAL_LEFT);  // 27
+		spi_master_write_command(dev, 0x00);					  // Dummy byte
+		spi_master_write_command(dev, 0x00);					  // Define start page address
+		spi_master_write_command(dev, CONFIG_SSD1306_FRAME_FREQ); // Frame frequency
+		spi_master_write_command(dev, 0x07);					  // Define end page address
+		spi_master_write_command(dev, 0x00);					  //
+		spi_master_write_command(dev, 0xFF);					  //
+		spi_master_write_command(dev, OLED_CMD_ACTIVE_SCROLL);	  // 2F
 	}
 
 	if (scroll == SCROLL_DOWN)
@@ -304,7 +304,7 @@ void spi_hardware_scroll(SSD1306_t *dev, ssd1306_scroll_type_t scroll)
 		spi_master_write_command(dev, OLED_CMD_CONTINUOUS_SCROLL); // 29
 		spi_master_write_command(dev, 0x00);					   // Dummy byte
 		spi_master_write_command(dev, 0x00);					   // Define start page address
-		spi_master_write_command(dev, 0x07);					   // Frame frequency
+		spi_master_write_command(dev, CONFIG_SSD1306_FRAME_FREQ);  // Frame frequency
 		//spi_master_write_command(dev, 0x01); // Define end page address
 		spi_master_write_command(dev, 0x00); // Define end page address
 		spi_master_write_command(dev, 0x3F); // Vertical scrolling offset
@@ -323,7 +323,7 @@ void spi_hardware_scroll(SSD1306_t *dev, ssd1306_scroll_type_t scroll)
 		spi_master_write_command(dev, OLED_CMD_CONTINUOUS_SCROLL); // 29
 		spi_master_write_command(dev, 0x00);					   // Dummy byte
 		spi_master_write_command(dev, 0x00);					   // Define start page address
-		spi_master_write_command(dev, 0x07);					   // Frame frequency
+		spi_master_write_command(dev, CONFIG_SSD1306_FRAME_FREQ);  // Frame frequency
 		//spi_master_write_command(dev, 0x01); // Define end page address
 		spi_master_write_command(dev, 0x00); // Define end page address
 		spi_master_write_command(dev, 0x01); // Vertical scrolling offset
@@ -335,6 +335,44 @@ void spi_hardware_scroll(SSD1306_t *dev, ssd1306_scroll_type_t scroll)
 		if (dev->_height == 32)
 			spi_master_write_command(dev, 0x20);
 		spi_master_write_command(dev, OLED_CMD_ACTIVE_SCROLL); // 2F
+	}
+
+	if (scroll == SCROLL_STOP)
+	{
+		spi_master_write_command(dev, OLED_CMD_DEACTIVE_SCROLL); // 2E
+	}
+}
+
+/**
+ * send the command for a continues scroll via hardware
+ * @param dev the screen device to interact with
+ * @param page the specific page to scroll
+ * @param scroll the direction of the scroll
+ */
+void spi_hardware_scroll_line(SSD1306_t *dev, int page, ssd1306_scroll_type_t scroll)
+{
+	if (scroll == SCROLL_RIGHT)
+	{
+		spi_master_write_command(dev, OLED_CMD_HORIZONTAL_RIGHT); // 26
+		spi_master_write_command(dev, 0x00);					  // Dummy byte
+		spi_master_write_command(dev, page);					  // Define start page address
+		spi_master_write_command(dev, CONFIG_SSD1306_FRAME_FREQ); // Frame frequency
+		spi_master_write_command(dev, page);					  // Define end page address
+		spi_master_write_command(dev, 0x00);					  //
+		spi_master_write_command(dev, 0xFF);					  //
+		spi_master_write_command(dev, OLED_CMD_ACTIVE_SCROLL);	  // 2F
+	}
+
+	if (scroll == SCROLL_LEFT)
+	{
+		spi_master_write_command(dev, OLED_CMD_HORIZONTAL_LEFT);  // 27
+		spi_master_write_command(dev, 0x00);					  // Dummy byte
+		spi_master_write_command(dev, page);					  // Define start page address
+		spi_master_write_command(dev, CONFIG_SSD1306_FRAME_FREQ); // Frame frequency
+		spi_master_write_command(dev, page);					  // Define end page address
+		spi_master_write_command(dev, 0x00);					  //
+		spi_master_write_command(dev, 0xFF);					  //
+		spi_master_write_command(dev, OLED_CMD_ACTIVE_SCROLL);	  // 2F
 	}
 
 	if (scroll == SCROLL_STOP)

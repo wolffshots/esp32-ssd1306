@@ -248,7 +248,7 @@ void i2c_hardware_scroll(SSD1306_t *dev, ssd1306_scroll_type_t scroll)
 		i2c_master_write_byte(cmd, OLED_CMD_HORIZONTAL_RIGHT, true); // 26
 		i2c_master_write_byte(cmd, 0x00, true);						 // Dummy byte
 		i2c_master_write_byte(cmd, 0x00, true);						 // Define start page address
-		i2c_master_write_byte(cmd, 0x07, true);						 // Frame frequency
+		i2c_master_write_byte(cmd, CONFIG_SSD1306_FRAME_FREQ, true); // Frame frequency
 		i2c_master_write_byte(cmd, 0x07, true);						 // Define end page address
 		i2c_master_write_byte(cmd, 0x00, true);						 //
 		i2c_master_write_byte(cmd, 0xFF, true);						 //
@@ -257,14 +257,14 @@ void i2c_hardware_scroll(SSD1306_t *dev, ssd1306_scroll_type_t scroll)
 
 	if (scroll == SCROLL_LEFT)
 	{
-		i2c_master_write_byte(cmd, OLED_CMD_HORIZONTAL_LEFT, true); // 27
-		i2c_master_write_byte(cmd, 0x00, true);						// Dummy byte
-		i2c_master_write_byte(cmd, 0x00, true);						// Define start page address
-		i2c_master_write_byte(cmd, 0x07, true);						// Frame frequency
-		i2c_master_write_byte(cmd, 0x07, true);						// Define end page address
-		i2c_master_write_byte(cmd, 0x00, true);						//
-		i2c_master_write_byte(cmd, 0xFF, true);						//
-		i2c_master_write_byte(cmd, OLED_CMD_ACTIVE_SCROLL, true);	// 2F
+		i2c_master_write_byte(cmd, OLED_CMD_HORIZONTAL_LEFT, true);	 // 27
+		i2c_master_write_byte(cmd, 0x00, true);						 // Dummy byte
+		i2c_master_write_byte(cmd, 0x00, true);						 // Define start page address
+		i2c_master_write_byte(cmd, CONFIG_SSD1306_FRAME_FREQ, true); // Frame frequency
+		i2c_master_write_byte(cmd, 0x07, true);						 // Define end page address
+		i2c_master_write_byte(cmd, 0x00, true);						 //
+		i2c_master_write_byte(cmd, 0xFF, true);						 //
+		i2c_master_write_byte(cmd, OLED_CMD_ACTIVE_SCROLL, true);	 // 2F
 	}
 
 	if (scroll == SCROLL_DOWN)
@@ -272,7 +272,7 @@ void i2c_hardware_scroll(SSD1306_t *dev, ssd1306_scroll_type_t scroll)
 		i2c_master_write_byte(cmd, OLED_CMD_CONTINUOUS_SCROLL, true); // 29
 		i2c_master_write_byte(cmd, 0x00, true);						  // Dummy byte
 		i2c_master_write_byte(cmd, 0x00, true);						  // Define start page address
-		i2c_master_write_byte(cmd, 0x07, true);						  // Frame frequency
+		i2c_master_write_byte(cmd, CONFIG_SSD1306_FRAME_FREQ, true);  // Frame frequency
 		//i2c_master_write_byte(cmd, 0x01, true); // Define end page address
 		i2c_master_write_byte(cmd, 0x00, true); // Define end page address
 		i2c_master_write_byte(cmd, 0x3F, true); // Vertical scrolling offset
@@ -292,7 +292,7 @@ void i2c_hardware_scroll(SSD1306_t *dev, ssd1306_scroll_type_t scroll)
 		i2c_master_write_byte(cmd, OLED_CMD_CONTINUOUS_SCROLL, true); // 29
 		i2c_master_write_byte(cmd, 0x00, true);						  // Dummy byte
 		i2c_master_write_byte(cmd, 0x00, true);						  // Define start page address
-		i2c_master_write_byte(cmd, 0x07, true);						  // Frame frequency
+		i2c_master_write_byte(cmd, CONFIG_SSD1306_FRAME_FREQ, true);  // Frame frequency
 		//i2c_master_write_byte(cmd, 0x01, true); // Define end page address
 		i2c_master_write_byte(cmd, 0x00, true); // Define end page address
 		i2c_master_write_byte(cmd, 0x01, true); // Vertical scrolling offset
@@ -305,6 +305,65 @@ void i2c_hardware_scroll(SSD1306_t *dev, ssd1306_scroll_type_t scroll)
 		if (dev->_height == 32)
 			i2c_master_write_byte(cmd, 0x20, true);
 		i2c_master_write_byte(cmd, OLED_CMD_ACTIVE_SCROLL, true); // 2F
+	}
+
+	if (scroll == SCROLL_STOP)
+	{
+		i2c_master_write_byte(cmd, OLED_CMD_DEACTIVE_SCROLL, true); // 2E
+	}
+
+	i2c_master_stop(cmd);
+	espRc = i2c_master_cmd_begin(I2C_NUM_0, cmd, 10 / portTICK_PERIOD_MS);
+	if (espRc == ESP_OK)
+	{
+		ESP_LOGD(tag, "Scroll command succeeded");
+	}
+	else
+	{
+		ESP_LOGE(tag, "Scroll command failed. code: 0x%.2X", espRc);
+	}
+
+	i2c_cmd_link_delete(cmd);
+}
+
+/**
+ * send the command for a continues scroll via hardware
+ * @param dev the screen device to interact with
+ * @param page the specific page to scroll
+ * @param scroll the direction of the scroll
+ */
+void i2c_hardware_scroll_line(SSD1306_t *dev, int page, ssd1306_scroll_type_t scroll)
+{
+	esp_err_t espRc;
+
+	i2c_cmd_handle_t cmd = i2c_cmd_link_create();
+	i2c_master_start(cmd);
+
+	i2c_master_write_byte(cmd, (dev->_address << 1) | I2C_MASTER_WRITE, true);
+	i2c_master_write_byte(cmd, OLED_CONTROL_BYTE_CMD_STREAM, true);
+
+	if (scroll == SCROLL_RIGHT)
+	{
+		i2c_master_write_byte(cmd, OLED_CMD_HORIZONTAL_RIGHT, true); // 26
+		i2c_master_write_byte(cmd, 0x00, true);						 // Dummy byte
+		i2c_master_write_byte(cmd, page, true);						 // Define start page address
+		i2c_master_write_byte(cmd, CONFIG_SSD1306_FRAME_FREQ, true); // Frame frequency
+		i2c_master_write_byte(cmd, page, true);						 // Define end page address
+		i2c_master_write_byte(cmd, 0x00, true);						 //
+		i2c_master_write_byte(cmd, 0xFF, true);						 //
+		i2c_master_write_byte(cmd, OLED_CMD_ACTIVE_SCROLL, true);	 // 2F
+	}
+
+	if (scroll == SCROLL_LEFT)
+	{
+		i2c_master_write_byte(cmd, OLED_CMD_HORIZONTAL_LEFT, true);	 // 27
+		i2c_master_write_byte(cmd, 0x00, true);						 // Dummy byte
+		i2c_master_write_byte(cmd, page, true);						 // Define start page address
+		i2c_master_write_byte(cmd, CONFIG_SSD1306_FRAME_FREQ, true); // Frame frequency
+		i2c_master_write_byte(cmd, page, true);						 // Define end page address
+		i2c_master_write_byte(cmd, 0x00, true);						 //
+		i2c_master_write_byte(cmd, 0xFF, true);						 //
+		i2c_master_write_byte(cmd, OLED_CMD_ACTIVE_SCROLL, true);	 // 2F
 	}
 
 	if (scroll == SCROLL_STOP)

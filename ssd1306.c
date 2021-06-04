@@ -38,6 +38,7 @@
 #include "ssd1306.h"
 #include "font8x8_basic.h"
 #include "font8x8_readable.h"
+#include "font8x8_readable_thin.h"
 #include "font8x8_space.h"
 
 #include <string.h>
@@ -91,8 +92,6 @@ void ssd1306_init(SSD1306_t *dev)
 #endif // CONFIG_SSD1306_128x32
     ssd1306_clear_screen(dev, false);
     ssd1306_contrast(dev, 0xff);
-    ssd1306_display_text(dev, 0, "oled init:", strlen("oled init:"), false);
-    ssd1306_display_text(dev, 1, "complete", strlen("complete"), false);
 }
 /**
  * de-initialise the screen device and free resources
@@ -146,6 +145,7 @@ void ssd1306_display_text(SSD1306_t *dev, int page, char *text, int text_len, bo
  */
 void ssd1306_wrapped_display_text(SSD1306_t *dev, int line, char *text)
 {
+    ssd1306_clear_line(dev, line, false);
     ssd1306_display_text(dev, line, text, strlen(text), false);
 }
 /**
@@ -217,7 +217,7 @@ void ssd1306_contrast(SSD1306_t *dev, int contrast)
  */
 void ssd1306_software_scroll(SSD1306_t *dev, int start, int end)
 {
-    ESP_LOGD(tag, "software_scroll start=%d end=%d _pages=%d", start, end, dev->_pages);
+    ESP_LOGI(tag, "software_scroll start=%d end=%d _pages=%d", start, end, dev->_pages);
     if (start < 0 || end < 0)
     {
         dev->_scEnable = false;
@@ -250,7 +250,7 @@ void ssd1306_software_scroll(SSD1306_t *dev, int start, int end)
  */
 void ssd1306_scroll_text(SSD1306_t *dev, char *text, int text_len, bool invert)
 {
-    ESP_LOGD(tag, "dev->_scEnable=%d", dev->_scEnable);
+    ESP_LOGI(tag, "dev->_scEnable=%d", dev->_scEnable);
     if (dev->_scEnable == false)
         return;
 
@@ -340,6 +340,23 @@ void ssd1306_hardware_scroll(SSD1306_t *dev, ssd1306_scroll_type_t scroll)
     else
     {
         i2c_hardware_scroll(dev, scroll);
+    }
+}
+/**
+ * start scrolling the screen via hardware
+ * @param dev the screen device to interact with
+ * @param page the specific page to scroll
+ * @param scroll the direction of the scroll
+ */
+void ssd1306_hardware_scroll_line(SSD1306_t *dev, int page, ssd1306_scroll_type_t scroll)
+{
+    if (dev->_address == SPIAddress)
+    {
+        spi_hardware_scroll_line(dev, page, scroll);
+    }
+    else
+    {
+        i2c_hardware_scroll_line(dev, page, scroll);
     }
 }
 /**
