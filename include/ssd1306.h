@@ -28,8 +28,8 @@
  * @brief defininitions for setting up, interacting with and sending commands to an ssd1306 driven screen via i2c or spi
  */
 
-#ifndef MAIN_SSD1306_H_
-#define MAIN_SSD1306_H_
+#ifndef MAIN_SSD1306_H
+#define MAIN_SSD1306_H
 
 #include "driver/spi_master.h"
 
@@ -145,6 +145,7 @@ void ssd1306_software_scroll(SSD1306_t *dev, int start, int end);
 void ssd1306_scroll_text(SSD1306_t *dev, char *text, int text_len, bool invert);
 void ssd1306_scroll_clear(SSD1306_t *dev);
 void ssd1306_hardware_scroll(SSD1306_t *dev, ssd1306_scroll_type_t scroll);
+void ssd1306_hardware_scroll_line(SSD1306_t *dev, int page, ssd1306_scroll_type_t scroll);
 void ssd1306_invert(uint8_t *buf, size_t blen);
 void ssd1306_flip(uint8_t *buf, size_t blen);
 uint8_t ssd1306_rotate(uint8_t ch1);
@@ -156,6 +157,7 @@ void i2c_init(SSD1306_t *dev, int width, int height);
 void i2c_display_image(SSD1306_t *dev, int page, int seg, uint8_t *images, int width);
 void i2c_contrast(SSD1306_t *dev, int contrast);
 void i2c_hardware_scroll(SSD1306_t *dev, ssd1306_scroll_type_t scroll);
+void i2c_hardware_scroll_line(SSD1306_t *dev, int page, ssd1306_scroll_type_t scroll);
 
 void spi_master_init(SSD1306_t *dev, int16_t GPIO_MOSI, int16_t GPIO_SCLK, int16_t GPIO_CS, int16_t GPIO_DC, int16_t GPIO_RESET);
 bool spi_master_write_byte(spi_device_handle_t SPIHandle, const uint8_t *Data, size_t DataLength);
@@ -165,5 +167,6 @@ void spi_init(SSD1306_t *dev, int width, int height);
 void spi_display_image(SSD1306_t *dev, int page, int seg, uint8_t *images, int width);
 void spi_contrast(SSD1306_t *dev, int contrast);
 void spi_hardware_scroll(SSD1306_t *dev, ssd1306_scroll_type_t scroll);
+void spi_hardware_scroll_line(SSD1306_t *dev, int page, ssd1306_scroll_type_t scroll);
 
-#endif /* MAIN_SSD1306_H_ */
+#endif /* MAIN_SSD1306_H */
