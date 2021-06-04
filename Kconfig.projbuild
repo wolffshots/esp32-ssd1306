@@ -13,7 +13,14 @@ menu "wolffshots/esp32-ssd1306 config"
 			bool "basic"
 		config SSID_FONT_SPACE
 			bool "space"
+		config SSID_FONT_READABLE_THIN
+			bool "thin readable"
 	endchoice
+	config SSD1306_FRAME_FREQ
+		int "scroll frame frequency"
+		default 4
+		help
+			the frequency with width a hardware scroll will be updated
 	config SSD1306_I2C_TAG
 		string "ssd1306 tag"
 		default "esp32-ssd1306_i2c"
